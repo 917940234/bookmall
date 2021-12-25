@@ -44,7 +44,8 @@ public class WebUtils {
         try {
             return Integer.parseInt(strInt);
         } catch (Exception e) {
-            e.printStackTrace();
+            //首页默认null，此时会报错，但是结果无影响
+            //e.printStackTrace();
         }
         return defaultValue;
     }

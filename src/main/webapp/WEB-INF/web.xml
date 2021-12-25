@@ -4,6 +4,11 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
 
+<!--    设置当前web工程session默认是20分钟超时时长，不设置则默认30分钟-->
+<!--    <session-config>-->
+<!--        <session-timeout>20</session-timeout>-->
+<!--    </session-config>-->
+
     <servlet>
         <servlet-name>DownloadServlet</servlet-name>
         <servlet-class>com.example.web.DownloadServlet</servlet-class>
@@ -39,4 +44,41 @@
         <servlet-name>BookServlet</servlet-name>
         <url-pattern>/manager/bookServlet</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ClientBookServlet</servlet-name>
+        <servlet-class>com.example.web.ClientBookServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ClientBookServlet</servlet-name>
+        <url-pattern>/client/bookServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CookieServlet</servlet-name>
+        <servlet-class>com.example.web.CookieServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CookieServlet</servlet-name>
+        <url-pattern>/cookieServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SessionServlet</servlet-name>
+        <servlet-class>com.example.web.SessionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SessionServlet</servlet-name>
+        <url-pattern>/sessionServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>KaptchaServlet</servlet-name>
+        <servlet-class>com.google.code.kaptcha.servlet.KaptchaServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>KaptchaServlet</servlet-name>
+        <url-pattern>/kaptcha.jpg</url-pattern>
+    </servlet-mapping>
+
 </web-app>

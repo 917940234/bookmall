@@ -6,11 +6,14 @@ import com.example.service.impl.UserServiceImpl;
 import com.example.utils.WebUtils;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
+
+import static com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,9 +41,29 @@ public class UserServlet extends BaseServlet {
             //跳回登录页面
             req.getRequestDispatcher("/pages/user/login.jsp").forward(req,resp);
         } else {
-            //登录成功，跳到成功页面login_success.jsp
+            //登录成功，保存用户名cookie
+            Cookie cookie = new Cookie("username",username);
+            cookie.setMaxAge(60 * 60 * 24 * 7);//当前cookie一周内有效
+            resp.addCookie(cookie);
+            //保存用户登录的信息到Session域中
+            req.getSession().setAttribute("user",loginUser);
+            //跳到成功页面login_success.jsp
             req.getRequestDispatcher("/pages/user/login_success.jsp").forward(req,resp);
         }
+    }
+
+    /**
+     * 注销
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
+    protected void logOut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //1. 销毁Session中用户登录的信息（或者销毁Session）
+        req.getSession().invalidate();
+        //2. 重定向到首页（或登录页面）
+        resp.sendRedirect(req.getContextPath());
     }
 
     protected void regist(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -49,11 +72,14 @@ public class UserServlet extends BaseServlet {
         String password = req.getParameter("password");
         String email = req.getParameter("email");
         String code = req.getParameter("code");
+        //获取Session中的验证码
+        String token = (String) req.getSession().getAttribute(KAPTCHA_SESSION_KEY);
+        req.getSession().removeAttribute(KAPTCHA_SESSION_KEY);
 
         User user = WebUtils.copyParamToBean(req.getParameterMap(), new User());
 
-        //2. 检查验证码是否正确，写死，要求验证码为：6n6np
-        if ("6n6np".equalsIgnoreCase(code)) {
+        //2. 检查验证码是否正确
+        if (token != null && token.equalsIgnoreCase(code)) {
             //3. 检查用户名是否可用
             if (userService.existsUsername(username)) {
                 //把回显信息保存到Request域中

@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.dao.BookDao;
 import com.example.pojo.Book;
+import com.example.pojo.Page;
 import com.example.service.impl.BookServiceImpl;
 import org.junit.jupiter.api.Test;
 
@@ -45,5 +46,15 @@ class BookServiceTest {
         for (Book book : bookService.queryBooks()) {
             System.out.println(book);
         }
+    }
+
+    @Test
+    public void page() {
+        System.out.println(bookService.page(1, Page.PAGE_SIZE));
+    }
+
+    @Test
+    public void pageByPrice() {
+        System.out.println(bookService.pageByPrice(1, Page.PAGE_SIZE,10,50));
     }
 }
